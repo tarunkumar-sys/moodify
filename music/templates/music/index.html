@@ -1,0 +1,372 @@
+{% extends 'music/base.html' %} {% block extra_css %}
+<style>
+  :root {
+    --primary: #1db954;
+    --dark-bg: #121212;
+    --dark-surface: #181818;
+    --dark-text: #ffffff;
+    --light-bg: #f8f9fa;
+    --light-surface: #ffffff;
+    --light-text: #2d3436;
+  }
+
+  /* Base Styles */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
+    background: var(--dark-bg);
+    color: var(--dark-text);
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .main-container {
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Header */
+  .main-container h1 {
+    justify-content: center;
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #1db954, #1ed760);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: cursive;
+  }
+
+  .subtitle {
+    justify-content: center;
+    display: flex;
+    font-size: 1.2rem;
+    color: #b3b3b3;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    font-family: Brush Script MT;
+  }
+
+  /* Form */
+  .mood-input-group {
+    background: var(--dark-surface);
+    border-radius: 12px;
+    max-width: 800px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mood-input-group label {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .mood-input-group input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--dark-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .mood-input-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+  }
+
+  .mood-tags {
+    max-width: 800px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  /* Tag Buttons */
+  .mood-tag-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--dark-text);
+    padding: 8px 20px;
+    margin: 4px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .mood-tag-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  /* Submit Button */
+  .mood-submit-btn {
+    background: var(--primary);
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    border: none;
+  }
+
+  .mood-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(29, 185, 84, 0.3);
+  }
+
+  /* Song Cards */
+  .song-card {
+    background: var(--dark-surface);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0 10px 10px 0;
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .song-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .song-card h5 {
+    color: var(--dark-text);
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+  /* Light Theme */
+  body.light-mode .song-card h5 {
+    color: var(
+      --light-text
+    ); /* This will change the text color to black in light mode */
+  }
+
+  /* Theme Toggle Button */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dark-text);
+  }
+
+  /* Light Theme */
+  body.light-mode {
+    background: var(--light-bg);
+    color: var(--light-text);
+  }
+
+  body.light-mode .mood-input-group,
+  body.light-mode .song-card {
+    background: var(--light-surface);
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
+  body.light-mode .mood-tag-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--light-text);
+  }
+
+  body.light-mode .subtitle {
+    color: #636e72;
+  }
+
+  body.light-mode .theme-toggle-btn {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--light-text);
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="main-container">
+  <button class="theme-toggle-btn" id="theme-toggle-btn">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    Toggle Theme
+  </button>
+
+  <h1>Let the Music Speak to Your Soul</h1>
+  <p class="subtitle">
+    Tune into the melodies that mirror your every mood, and let the rhythm guide
+    your heart.
+  </p>
+
+  <form id="mood-form" method="post">
+    {% csrf_token %}
+    <div class="mood-input-group">
+      <label for="id_mood_input"
+        >Search notes that meets your emotions...</label
+      >
+      {{ form.mood_input }}
+    </div>
+
+    <div class="mood-tags text-center mb-4">
+      <button type="button" class="mood-tag-btn" data-mood="Happy">
+        😊 Happy
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Relaxed">
+        🧘 Relaxed
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Energetic">
+        ⚡ Energetic
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Melancholic">
+        🎻 Melancholic
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Focused">
+        🎯 Focused
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Romantic">
+        💕 Romantic
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Chill">
+        ❄️ Chill
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Motivated">
+        🚀 Motivated
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Sad">😢 Sad</button>
+      <button type="button" class="mood-tag-btn" data-mood="Dark">
+        🌑 Dark
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Excited">
+        🤩 Excited
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Sleepy">
+        😴 Sleepy
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Epic">
+        🎬 Epic
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Groovy">
+        🕺 Groovy
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Dreamy">
+        🌙 Dreamy
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Lofi">
+        🎵 Lofi
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Uplifting">
+        ☀️ Uplifting
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Trippy">
+        🔮 Trippy
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Angry">
+        🔥 Angry
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Festive">
+        🎉 Festive
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Retro">
+        📼 Retro
+      </button>
+      <button type="button" class="mood-tag-btn" data-mood="Mystical">
+        🧙 Mystical
+      </button>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="mood-submit-btn">
+        Find Your Soundtrack
+      </button>
+    </div>
+  </form>
+
+  <div class="recommended-section mt-5">
+    <h2 class="mb-4">Recommended Tracks</h2>
+    <div id="recommendations" class="row" style="margin: 0 5px">
+      <!-- AJAX content remains same -->
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // 1. Handle Mood Tag Clicks
+  document.querySelectorAll(".mood-tag-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const mood = btn.getAttribute("data-mood");
+      document.getElementById("id_mood_input").value = mood;
+    });
+  });
+
+  // 2. AJAX Submission (if you're using jQuery)
+  $(document).ready(function () {
+    $("#mood-form").submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: "{% url 'recommend_songs' %}",
+        type: "POST",
+        data: $(this).serialize(),
+        success: function (response) {
+          var recDiv = $("#recommendations");
+          recDiv.empty();
+          if (response.songs.length > 0) {
+            response.songs.forEach(function (song) {
+              var songHtml = '<div class="song-card">';
+              songHtml += "<h5>" + song.title + " - " + song.artist + "</h5>";
+              songHtml += "<p><strong>Album:</strong> " + song.album + "</p>";
+              songHtml +=
+                "<p><strong>Mood Tags:</strong> " + song.mood_tags + "</p>";
+              if (song.lyrics) {
+                songHtml += "<p>" + song.lyrics.substring(0, 150) + "...</p>";
+              }
+              if (song.audio_url) {
+                songHtml += '<audio class="audio-player" controls>';
+                songHtml +=
+                  '<source src="' + song.audio_url + '" type="audio/mpeg">';
+                songHtml += "Your browser does not support the audio element.";
+                songHtml += "</audio>";
+              }
+              songHtml += "</div>";
+              recDiv.append(songHtml);
+            });
+          } else {
+            recDiv.html(
+              "<p>No recommendations found. Try a different mood.</p>"
+            );
+          }
+        },
+        error: function (xhr, status, error) {
+          alert("An error occurred. Please try again.");
+        },
+      });
+    });
+  });
+
+  // 3. Theme Toggle Functionality
+  const themeToggleBtn = document.getElementById("theme-toggle-btn");
+  themeToggleBtn.addEventListener("click", function () {
+    const body = document.body;
+    body.classList.toggle("light-mode");
+  });
+</script>
+{% endblock %}
