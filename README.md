@@ -13,7 +13,7 @@ Welcome to **Moodify**, your personalized music streaming platform based on your
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/tarunkumar-sys/moodify.git
-cd music
+cd moodify
 ```
 
 ### 2. Install Dependencies
